@@ -1,4 +1,6 @@
 # understand.ai Anonymizer (Now working with RGBA Images)
+`license plate remover`
+`face remover`
 
 To improve privacy and make it easier for companies to comply with GDPR, we at [understand.ai](https://understand.ai/) 
 decided to open-sourcing our anonymization software and weights for a model trained on our in-house datasets 
