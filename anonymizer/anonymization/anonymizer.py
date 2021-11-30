@@ -7,14 +7,16 @@ from tqdm import tqdm
 
 
 def load_np_image(image_path):
-    image = Image.open(image_path).convert('RGB')
-    np_image = np.array(image)
-    return np_image
+    image = Image.open(image_path).convert('RGBA')
+    np_image = np.array(image.convert('RGB'))
+    return image, np_image
 
 
-def save_np_image(image, image_path):
-    pil_image = Image.fromarray((image).astype(np.uint8), mode='RGB')
+def save_np_image(image, image_path, image_rgba):
+    pil_image = Image.fromarray(image.astype(np.uint8), mode='RGB')
+    pil_image.putalpha(image_rgba.split()[-1]) # add the original alpha channel information to the created image
     pil_image.save(image_path)
+
 
 
 def save_detections(detections, detections_path):
@@ -64,8 +66,8 @@ class Anonymizer:
             output_detections_path = (Path(output_path) / relative_path).with_suffix('.json')
 
             # Anonymize image
-            image = load_np_image(str(input_image_path))
-            anonymized_image, detections = self.anonymize_image(image=image, detection_thresholds=detection_thresholds)
-            save_np_image(image=anonymized_image, image_path=str(output_image_path))
+            image_rgba, image_np_arr = load_np_image(str(input_image_path))
+            anonymized_image, detections = self.anonymize_image(image=image_np_arr, detection_thresholds=detection_thresholds)
+            save_np_image(image=anonymized_image, image_path=str(output_image_path), image_rgba=image_rgba)
             if write_json:
                 save_detections(detections=detections, detections_path=str(output_detections_path))
