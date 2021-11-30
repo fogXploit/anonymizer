@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 
 import numpy as np
@@ -16,6 +17,11 @@ def save_np_image(image, image_path, image_rgba):
     pil_image = Image.fromarray(image.astype(np.uint8), mode='RGB')
     pil_image.putalpha(image_rgba.split()[-1]) # add the original alpha channel information to the created image
     pil_image.save(image_path)
+
+
+def remove_original_file(image_path):
+    os.remove(image_path)
+    print('File {} successfully removed.'.format(image_path))
 
 
 
@@ -48,7 +54,7 @@ class Anonymizer:
             detected_boxes.extend(new_boxes)
         return self.obfuscator.obfuscate(image, detected_boxes), detected_boxes
 
-    def anonymize_images(self, input_path, output_path, detection_thresholds, file_types, write_json):
+    def anonymize_images(self, input_path, output_path, detection_thresholds, file_types, write_json, remove_file):
         print(f'Anonymizing images in {input_path} and saving the anonymized images to {output_path}...')
 
         Path(output_path).mkdir(exist_ok=True)
@@ -71,3 +77,5 @@ class Anonymizer:
             save_np_image(image=anonymized_image, image_path=str(output_image_path), image_rgba=image_rgba)
             if write_json:
                 save_detections(detections=detections, detections_path=str(output_detections_path))
+            if remove_file:
+                remove_original_file(image_path=input_image_path)

@@ -69,7 +69,7 @@ class TestAnonymizer:
 
         anonymizer = Anonymizer(detectors={'face': mock_detector}, obfuscator=obfuscator)
         anonymizer.anonymize_images(str(input_path), output_path=str(output_path), detection_thresholds={'face': 0.1},
-                                    file_types=['jpg', 'png'], write_json=False)
+                                    file_types=['jpg', 'png'], write_json=False, remove_file=False)
 
         anonymized_images = []
         for image_path in sorted(output_path.glob('**/*.png')):

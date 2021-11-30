@@ -50,7 +50,9 @@ def parse_args():
                              'Must be in [0.001, 1.0]')
     parser.add_argument('--write-detections', dest='write_detections', action='store_true')
     parser.add_argument('--no-write-detections', dest='write_detections', action='store_false')
-    parser.set_defaults(write_detections=True)
+    parser.add_argument('--remove-files', dest='remove_file', action='store_true',
+                        help='If set the original image files will be deleted after processing.')
+    parser.set_defaults(write_detections=True, remove_file=False)
     parser.add_argument('--obfuscation-kernel', required=False, default='21,2,9',
                         metavar='kernel_size,sigma,box_kernel_size',
                         help='This parameter is used to change the way the blurring is done. '
@@ -70,6 +72,7 @@ def parse_args():
     print(f'face-threshold: {args.face_threshold}')
     print(f'plate-threshold: {args.plate_threshold}')
     print(f'write-detections: {args.write_detections}')
+    print(f'remove-file: {args.remove_file}')
     print(f'obfuscation-kernel: {args.obfuscation_kernel}')
     print()
 
@@ -77,7 +80,7 @@ def parse_args():
 
 
 def main(input_path, image_output_path, weights_path, image_extensions, face_threshold, plate_threshold,
-         write_json, obfuscation_parameters):
+         write_json, remove_file, obfuscation_parameters):
     download_weights(download_directory=weights_path)
 
     kernel_size, sigma, box_kernel_size = obfuscation_parameters.split(',')
@@ -93,7 +96,7 @@ def main(input_path, image_output_path, weights_path, image_extensions, face_thr
     anonymizer = Anonymizer(obfuscator=obfuscator, detectors=detectors)
     anonymizer.anonymize_images(input_path=input_path, output_path=image_output_path,
                                 detection_thresholds=detection_thresholds, file_types=image_extensions.split(','),
-                                write_json=write_json)
+                                write_json=write_json, remove_file=remove_file)
 
 
 if __name__ == '__main__':
@@ -101,4 +104,4 @@ if __name__ == '__main__':
     main(input_path=args.input, image_output_path=args.image_output, weights_path=args.weights,
          image_extensions=args.image_extensions,
          face_threshold=args.face_threshold, plate_threshold=args.plate_threshold,
-         write_json=args.write_detections, obfuscation_parameters=args.obfuscation_kernel)
+         write_json=args.write_detections, remove_file=args.remove_file, obfuscation_parameters=args.obfuscation_kernel)
