@@ -1,4 +1,4 @@
-# understand.ai Anonymizer
+# understand.ai Anonymizer (Now working with RGBA Images)
 
 To improve privacy and make it easier for companies to comply with GDPR, we at [understand.ai](https://understand.ai/) 
 decided to open-sourcing our anonymization software and weights for a model trained on our in-house datasets 
@@ -81,6 +81,13 @@ Example:
 
 ```bash
 PYTHONPATH=$PYTHONPATH:. python anonymizer/bin/anonymize.py --input /path/to/input_folder --image-output /path/to/output_folder --weights /path/to/store/weights --no-write-detections
+```
+
+In case you want to delete the original images, add the parameter `--remove-files`.
+Example:
+
+```bash
+PYTHONPATH=$PYTHONPATH:. python anonymizer/bin/anonymize.py --input /path/to/input_folder --image-output /path/to/output_folder --weights /path/to/store/weights --remove-files
 ```
 
 Detection threshold for faces and license plates can be passed as additional parameters.
